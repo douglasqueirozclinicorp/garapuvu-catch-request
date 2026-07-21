@@ -6,4 +6,13 @@ dist/
 build/
 *.log
 .DS_Store
+
+# Playwright
+playwright-report/
+test-results/
+.auth/
+blob-report/
+
+# Pasta de assets da pagina salva do PageSpeed (pesada; nao versionada)
 oci-layout*/
+*_files/

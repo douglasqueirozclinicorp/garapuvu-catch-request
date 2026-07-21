@@ -87,23 +87,57 @@ code{background:#f2ecdd;padding:1px 6px;border-radius:6px;font-size:12px;color:#
 .scorewrap{display:flex;gap:18px;flex-wrap:wrap}
 .scorecard{text-align:center}
 .ring{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;border:5px solid var(--c);color:var(--tx);font-weight:800;font-size:18px}
+.lh-film{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
+.lh-film img{height:130px;border:1px solid var(--ln);border-radius:6px;background:#fff;flex:none;cursor:zoom-in}
+.lh-shot{max-width:340px;width:100%;border:1px solid var(--ln);border-radius:10px;cursor:zoom-in}
+.lightbox{position:fixed;inset:0;background:rgba(20,24,16,.82);display:flex;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
+.lightbox img{max-width:96vw;max-height:92vh;border-radius:10px;box-shadow:0 20px 60px -10px #000}
+.treemap{display:flex;flex-wrap:wrap;gap:3px;border:1px solid var(--ln);border-radius:10px;padding:6px;background:var(--card2);align-content:flex-start}
+.tmtile{position:relative;overflow:hidden;border-radius:6px;min-width:64px;min-height:48px;padding:6px 8px;color:#3a2f00;font-size:11px;cursor:pointer;background:var(--soft);border:1px solid var(--softbd)}
+.tmtile:hover{outline:2px solid var(--pri)}
+.tmtile .tmb{position:absolute;left:0;top:0;bottom:0;background:rgba(201,64,63,.28)}
+.tmtile .tmt{position:relative;z-index:1;font-weight:700;word-break:break-all;line-height:1.2}
+.tmtile .tms{position:relative;z-index:1;color:#5a4a12}
+.tmbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:6px 0 14px}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:14px 16px;box-shadow:0 8px 24px -20px rgba(38,48,31,.18)}
+.step .stepn{flex:none;width:26px;height:26px;border-radius:50%;background:var(--pri);color:#3a2f00;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.step b{display:block;margin-bottom:2px}.step .small{display:block}
+.help{background:var(--soft);border:1px solid var(--softbd);border-radius:12px;padding:10px 16px;margin:0 0 16px}
+.help>summary{cursor:pointer;font-weight:700;color:var(--pri2)}
+.help .helpbody{margin-top:8px}.help .helpbody p{margin:8px 0;font-size:13.5px;color:var(--tx)}
+.help a{color:var(--bl)}
 </style></head><body>
 <div class="topbar"></div><div class="wrap">
 <div class="brand"><svg width="27" height="27" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="6" fill="#e6a400"/><circle cx="12" cy="9" r="2.3" fill="#c58c00"/><path d="M12 9 L12 22" stroke="#2e8b57" stroke-width="2.4" stroke-linecap="round"/><path d="M12 16 C8.5 15 6.5 17 6.5 19.5 C10 19.5 12 18 12 16Z" fill="#2e8b57"/><path d="M12 14 C15.5 13 17.5 15 17.5 17.5 C14 17.5 12 16 12 14Z" fill="#3ba86a"/></svg><span class="wm">Gara<b>puvu</b></span><span class="role">Analisador de Requests</span></div>
 <h1>Analisador de requests</h1>
-<p class="sub">Abra o <code>garapuvu-sessao-*.json</code>, informe a chave e explore requisicoes (de qualquer dominio), console, cookies e storage.</p>
+<p class="sub">Abra o arquivo <code>garapuvu-sessao-*.json</code> gerado na captura, informe a chave do time e explore tudo: requisicoes, console, cookies, storage, seguranca e performance.</p>
+
+<div class="steps" data-testid="steps" aria-label="Como usar">
+  <div class="step"><span class="stepn">1</span><div><b>Carregue a sessao</b><span class="small">Selecione o .json exportado pelo bookmarklet PARAR.</span></div></div>
+  <div class="step"><span class="stepn">2</span><div><b>Informe a chave</b><span class="small">A mesma TEAM_KEY usada na captura. Clique em <b>Analisar</b>.</span></div></div>
+  <div class="step"><span class="stepn">3</span><div><b>Explore as abas</b><span class="small">Requisicoes, Console, Cookies, Storage, e importe relatorios em <b>Seguranca</b> e <b>Performance</b>.</span></div></div>
+</div>
+
+<details class="help" data-testid="help-imports"><summary>Como importar relatorios (OWASP ZAP, PageSpeed, Lighthouse)?</summary>
+  <div class="helpbody">
+    <p><b>OWASP ZAP</b> (aba <b>Seguranca</b>): no ZAP, gere <em>Report &rarr; Generate Report</em> em HTML (ou JSON) e importe no botao <b>"Importar relatorio OWASP ZAP"</b>. Os alertas entram no resumo consolidado de severidades.</p>
+    <p><b>Lighthouse do DevTools</b> (aba <b>Performance</b>): no Chrome DevTools &rarr; aba Lighthouse &rarr; <em>Analyze</em> &rarr; menu <em>Export &rarr; Save as JSON</em>. Importe no botao <b>"Importar JSON do Lighthouse (DevTools)"</b> para ver scores, filmstrip, screenshot e treemap.</p>
+    <p><b>PageSpeed Insights</b> (aba <b>Performance</b>): rode em <a href="https://pagespeed.web.dev" target="_blank" rel="noopener">pagespeed.web.dev</a> (ou pelo botao "Rodar no Lighthouse"), salve a pagina do resultado (<em>Ctrl/Cmd+S</em>, "completa") e importe o <code>.htm</code> no botao <b>"Importar HTML do PageSpeed"</b>.</p>
+  </div>
+</details>
 
 <div class="card" id="loader">
-  <label>1. Arquivo da sessao (.json)</label>
-  <input type="file" id="file" accept=".json,application/json">
-  <label>2. Chave do time</label>
-  <input type="password" id="key" placeholder="chave secreta do time (TEAM_KEY)" autocomplete="off">
-  <div class="row"><button id="go" disabled>Analisar</button><button id="dl" class="sec" style="display:none">Baixar JSON decifrado</button></div>
-  <div class="msg" id="msg"></div>
+  <label for="file">1. Arquivo da sessao (.json)</label>
+  <input type="file" id="file" data-testid="input-file" accept=".json,application/json">
+  <label for="key">2. Chave do time</label>
+  <input type="password" id="key" data-testid="input-key" placeholder="chave secreta do time (TEAM_KEY)" autocomplete="off">
+  <div class="row"><button id="go" data-testid="btn-analisar" disabled>Analisar</button><button id="dl" data-testid="btn-download" class="sec" style="display:none">Baixar JSON decifrado</button></div>
+  <div class="msg" id="msg" data-testid="msg"></div>
 </div>
 
 <div class="card" id="metaCard" style="display:none"><div class="metagrid" id="meta"></div></div>
-<div class="card" id="viewer" style="display:none"><div class="tabs" id="tabs"></div><div id="panes"></div></div>
+<div class="card" id="viewer" data-testid="viewer" style="display:none"><div class="tabs" id="tabs" data-testid="tabs"></div><div id="panes"></div></div>
 
 <script>
 var $=function(id){return document.getElementById(id);};
@@ -162,9 +196,9 @@ function render(){
 
   var audit=securityAudit(s,m,net,cookies,ls,ss);
   var tabsDef=[['sec','Seguranca',audit.findings.length],['perf','Performance',0],['req','Requisicoes',netCount],['con','Console',con?con.length:0],['cook','Cookies',cookies.length],['ls','localStorage',Object.keys(ls).length],['ss','sessionStorage',Object.keys(ss).length],['cache','Cache',cacheCount]];
-  var th='';for(var i=0;i<tabsDef.length;i++){th+='<button class="tab'+(i===0?' active':'')+'" data-p="'+tabsDef[i][0]+'">'+tabsDef[i][1]+'<span class="n">'+tabsDef[i][2]+'</span></button>';}
+  var th='';for(var i=0;i<tabsDef.length;i++){th+='<button class="tab'+(i===0?' active':'')+'" data-p="'+tabsDef[i][0]+'" data-testid="tab-'+tabsDef[i][0]+'">'+tabsDef[i][1]+'<span class="n">'+tabsDef[i][2]+'</span></button>';}
   $('tabs').innerHTML=th;
-  var panes='';tabsDef.forEach(function(t,i){panes+='<div class="pane'+(i===0?' active':'')+'" id="pane-'+t[0]+'"></div>';});
+  var panes='';tabsDef.forEach(function(t,i){panes+='<div class="pane'+(i===0?' active':'')+'" id="pane-'+t[0]+'" data-testid="pane-'+t[0]+'"></div>';});
   $('panes').innerHTML=panes;$('viewer').style.display='block';
 
   renderReq(net,fb,m.host);
@@ -298,22 +332,6 @@ function securityAudit(s,meta,net,cookies,ls,ss){
   var cseen={},cu=[];creds.forEach(function(c){var kk=c.src+'|'+c.key+'|'+c.value;if(!cseen[kk]){cseen[kk]=1;cu.push(c);}});
   return {findings:fu,creds:cu};
 }
-function renderSecurity(audit){
-  var host=$('pane-sec');
-  var order={critico:0,alto:1,medio:2,baixo:3,info:4},labels={critico:'CRITICO',alto:'ALTO',medio:'MEDIO',baixo:'BAIXO',info:'INFO'};
-  var counts={};audit.findings.forEach(function(f){counts[f.sev]=(counts[f.sev]||0)+1;});
-  var sum='';['critico','alto','medio','baixo','info'].forEach(function(sv){sum+='<span class="sevpill '+sv+'">'+labels[sv]+': '+(counts[sv]||0)+'</span>';});
-  var h='<div class="secsummary">'+sum+'</div>';
-  h+='<div class="credbox '+(audit.creds.length?'bad':'good')+'"><h3 style="margin:0 0 8px">&#128273; Caca-credenciais</h3>';
-  if(audit.creds.length){h+='<p class="small" style="margin:0 0 10px">Encontrei '+audit.creds.length+' valor(es) sob chaves de senha/credencial em superficies recuperaveis:</p><table><thead><tr><th>Chave</th><th>Origem</th><th>Valor</th></tr></thead><tbody>';audit.creds.forEach(function(c,i){h+='<tr><td class="mono">'+esc(c.key)+'</td><td class="small">'+esc(c.src)+'</td><td><span class="mono" id="cv-'+i+'">'+esc(maskC(c.value))+'</span> <button class="sec tokbtn" data-cv="'+i+'">revelar</button></td></tr>';});h+='</tbody></table>';}
-  else{h+='<p class="small" style="margin:0">Nenhuma senha em texto sob chaves de credencial nas superficies capturadas. Obs.: senha de login em HTTPS ainda aparece no corpo da requisicao - veja os achados abaixo.</p>';}
-  h+='</div>';
-  if(!audit.findings.length){h+='<div class="empty">Nenhum achado de seguranca nas heuristicas atuais.</div>';}
-  else{var sorted=audit.findings.slice().sort(function(a,b){return order[a.sev]-order[b.sev];});h+='<div class="findlist">';sorted.forEach(function(f){h+='<div class="finding '+f.sev+'"><div class="fh"><span class="sev '+f.sev+'">'+labels[f.sev]+'</span><b>'+esc(f.title)+'</b></div>'+(f.detail?'<div class="fd">'+esc(f.detail)+'</div>':'')+(f.where?'<div class="small">Onde: '+esc(f.where)+'</div>':'')+(f.rec?'<div class="frec">&#128161; '+esc(f.rec)+'</div>':'')+'</div>';});h+='</div>';}
-  host.innerHTML=h;
-  host.querySelectorAll('[data-cv]').forEach(function(b){b.addEventListener('click',function(){var i=b.dataset.cv;$('cv-'+i).textContent=audit.creds[i].value;b.style.display='none';});});
-  function maskC(v){v=String(v);if(v.length<=4)return '****';return v.slice(0,1)+'***'+v.slice(-1)+' ('+v.length+' chars)';}
-}
 
 var __zap=null,__lh=null;
 function setTabBadge(p,n){var t=document.querySelector('.tab[data-p="'+p+'"] .n');if(t)t.textContent=n;}
@@ -325,9 +343,79 @@ function zapSev(risk){risk=(risk||'').toLowerCase();if(/alto|high/.test(risk))re
 function parseZapHtml(text){var doc=new DOMParser().parseFromString(text,'text/html');var rows=doc.querySelectorAll('.alert-type-counts-table tbody tr');var alerts=[],total=0;rows.forEach(function(tr){var an=tr.querySelector('th a')||tr.querySelector('th');var name=an?an.textContent.trim():'';var rl=tr.querySelector('.risk-level');var risk=rl?rl.textContent.trim():'';var cs=tr.querySelector('td span');var cnt=cs?(parseInt((cs.textContent||'').replace(/\D/g,''))||0):0;if(!name)return;alerts.push({name:name,risk:risk,count:cnt,sev:zapSev(risk)});total+=cnt;});var byRisk={};alerts.forEach(function(a){byRisk[a.risk]=(byRisk[a.risk]||0)+a.count;});return {total:total,alerts:alerts,byRisk:byRisk,source:'html'};}
 function parseZapJson(o){var alerts=[],map={};function addA(a){var name=a.alert||a.name||'Alerta';var risk=String(a.riskdesc||a.risk||'').split(' ')[0]||'';var cnt=parseInt(a.count||(a.instances&&a.instances.length)||1)||1;if(!map[name]){map[name]={name:name,risk:risk,count:0,sev:zapSev(risk)};alerts.push(map[name]);}map[name].count+=cnt;}if(o.site){(Array.isArray(o.site)?o.site:[o.site]).forEach(function(st){(st.alerts||[]).forEach(addA);});}else if(o.alerts){o.alerts.forEach(addA);}var total=alerts.reduce(function(x,a){return x+a.count;},0);var byRisk={};alerts.forEach(function(a){byRisk[a.risk]=(byRisk[a.risk]||0)+a.count;});return {total:total,alerts:alerts,byRisk:byRisk,source:'json'};}
 function zapSectionHtml(zap){var labels={critico:'CRITICO',alto:'ALTO',medio:'MEDIO',baixo:'BAIXO',info:'INFO'},order={critico:0,alto:1,medio:2,baixo:3,info:4};var al=zap.alerts.slice().sort(function(a,b){return (order[a.sev]-order[b.sev])||(b.count-a.count);});var top=al.filter(function(a){return a.sev==='alto'||a.sev==='medio';}).slice(0,3).map(function(a){return a.name;});var interp='O ZAP encontrou '+zap.total+' alerta(s) em '+zap.alerts.length+' tipo(s). '+(top.length?('Priorize: '+top.join('; ')+'.'):'Sem alertas de risco medio/alto.');var h='<h3 style="margin:22px 0 8px">&#9889; OWASP ZAP</h3><div class="note">'+esc(interp)+'</div><table><thead><tr><th>Alerta</th><th>Risco</th><th>Qtde</th></tr></thead><tbody>';al.forEach(function(a){h+='<tr><td>'+esc(a.name)+'</td><td><span class="sev '+a.sev+'">'+esc(a.risk||a.sev)+'</span></td><td>'+a.count+'</td></tr>';});return h+'</tbody></table>';}
-function renderSecurity(audit){var host=$('pane-sec');var order={critico:0,alto:1,medio:2,baixo:3,info:4},labels={critico:'CRITICO',alto:'ALTO',medio:'MEDIO',baixo:'BAIXO',info:'INFO'};var zap=__zap;var counts={critico:0,alto:0,medio:0,baixo:0,info:0};audit.findings.forEach(function(f){counts[f.sev]=(counts[f.sev]||0)+1;});if(zap){zap.alerts.forEach(function(a){counts[a.sev]=(counts[a.sev]||0)+(a.count||1);});}var total=audit.findings.length+(zap?zap.total:0);var sum='';['critico','alto','medio','baixo','info'].forEach(function(sv){sum+='<span class="sevpill '+sv+'">'+labels[sv]+': '+(counts[sv]||0)+'</span>';});var h='<div class="scanpanel"><div class="scanhead"><b>Scan de seguranca consolidado</b><span class="small">'+total+' achado(s) '+(zap?'(sessao + OWASP ZAP)':'(sessao)')+'</span></div><div class="secsummary">'+sum+'</div><div class="importrow"><label class="imp">Importar relatorio OWASP ZAP<input type="file" id="zapFile" accept=".html,.json,.xml" style="display:none"></label>'+(zap?'<span class="small">ZAP: '+zap.total+' alertas / '+zap.alerts.length+' tipos ('+zap.source+')</span>':'<span class="small">nenhum relatorio ZAP importado</span>')+'</div></div>';h+=credboxHtml(audit.creds);if(zap)h+=zapSectionHtml(zap);h+='<h3 style="margin:22px 0 8px">Achados da sessao capturada</h3>';if(!audit.findings.length){h+='<div class="empty">Nenhum achado nas heuristicas da sessao.</div>';}else{var sorted=audit.findings.slice().sort(function(a,b){return order[a.sev]-order[b.sev];});h+='<div class="findlist">';sorted.forEach(function(f){h+=findingHtml(f,labels);});h+='</div>';}host.innerHTML=h;wireCredReveal(host,audit.creds);var zf=$('zapFile');if(zf){zf.addEventListener('change',function(){var fl=zf.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){try{__zap=/\.json$/i.test(fl.name)?parseZapJson(JSON.parse(r.result)):parseZapHtml(r.result);setTabBadge('sec',audit.findings.length+__zap.total);renderSecurity(audit);}catch(e){alert('Nao consegui ler o relatorio ZAP: '+e);}};r.readAsText(fl);});}}
-function parseLighthouse(o){var cats=o.categories||{};function C(k){return cats[k]&&cats[k].score!=null?Math.round(cats[k].score*100):null;}var scores={performance:C('performance'),accessibility:C('accessibility'),'best-practices':C('best-practices'),seo:C('seo'),pwa:C('pwa')};var au=o.audits||{};function metric(k){var a=au[k];return a?{title:a.title,display:a.displayValue,score:a.score}:null;}var vitals={lcp:metric('largest-contentful-paint'),fcp:metric('first-contentful-paint'),cls:metric('cumulative-layout-shift'),tbt:metric('total-blocking-time'),si:metric('speed-index'),tti:metric('interactive')};var opps=[];Object.keys(au).forEach(function(k){var a=au[k];if(a&&a.details&&a.details.type==='opportunity'&&a.numericValue>0&&a.score!=null&&a.score<1){opps.push({title:a.title,ms:Math.round(a.numericValue),display:a.displayValue});}});opps.sort(function(x,y){return y.ms-x.ms;});return {scores:scores,vitals:vitals,opps:opps.slice(0,8),url:(o.finalDisplayedUrl||o.finalUrl||o.requestedUrl||'')};}
-function parseLighthouseHtml(html){try{var doc=new DOMParser().parseFromString(html,'text/html');var scores={};var categories=['performance','accessibility','best-practices','seo','pwa'];categories.forEach(function(cat){var el=doc.querySelector('[data-category="'+cat+'"] .score');if(el){var scoreText=(el.textContent||'').replace(/\D/g,'');scores[cat]=parseInt(scoreText)||null;}});var vitals={};var metricsMap={lcp:'Largest Contentful Paint',fcp:'First Contentful Paint',cls:'Cumulative Layout Shift',tbt:'Total Blocking Time',si:'Speed Index',tti:'Time to Interactive'};Object.keys(metricsMap).forEach(function(k){var label=metricsMap[k];var row=Array.from(doc.querySelectorAll('table tr')).find(function(tr){return tr.textContent.indexOf(label)>=0;});if(row){var cells=row.querySelectorAll('td');if(cells.length>=2){var display=cells[1].textContent.trim();vitals[k]={title:label,display:display,score:1};}}});var url=doc.querySelector('meta[name="url"]')||doc.querySelector('[data-final-url]');var urlVal=url?(url.getAttribute('content')||url.getAttribute('data-final-url')):'';return {scores:scores,vitals:vitals,opps:[],url:urlVal};}catch(e){return null;}}
-function lhSectionHtml(lh){function col(s){if(s==null)return 'var(--mut)';return s>=90?'#0cce6b':(s>=50?'#ffa400':'#ff4e42');}var names={performance:'Performance',accessibility:'Acessibilidade','best-practices':'Boas praticas',seo:'SEO',pwa:'PWA'};var h='<h3 style="margin:22px 0 8px">Scores Lighthouse</h3><div class="scorewrap">';Object.keys(names).forEach(function(k){var sc=lh.scores[k];h+='<div class="scorecard"><div class="ring" style="--c:'+col(sc)+'"><span>'+(sc==null?'-':sc)+'</span></div><div class="small">'+names[k]+'</div></div>';});h+='</div>';var vn={lcp:'LCP',fcp:'FCP',cls:'CLS',tbt:'TBT',si:'Speed Index',tti:'TTI'};h+='<h3 style="margin:22px 0 8px">Core Web Vitals</h3><table><thead><tr><th>Metrica</th><th>Valor</th></tr></thead><tbody>';Object.keys(vn).forEach(function(k){var v=lh.vitals[k];if(v)h+='<tr><td>'+vn[k]+' - '+esc(v.title||'')+'</td><td><b>'+esc(v.display||'-')+'</b></td></tr>';});h+='</tbody></table>';if(lh.opps.length){h+='<h3 style="margin:22px 0 8px">Principais oportunidades</h3><table><thead><tr><th>Oportunidade</th><th>Economia estimada</th></tr></thead><tbody>';lh.opps.forEach(function(o){h+='<tr><td>'+esc(o.title)+'</td><td>'+esc(o.display||(o.ms+' ms'))+'</td></tr>';});h+='</tbody></table>';}return h;}
-function renderPerf(){var host=$('pane-perf');if(!host)return;var meta=(window.decoded&&window.decoded.meta)||{};var main=meta.url||'';if(!main&&window.decoded&&window.decoded.sensitive&&window.decoded.sensitive.network&&window.decoded.sensitive.network[0])main=window.decoded.sensitive.network[0].url||'';var lh=__lh;var h='<div class="scanpanel"><div class="scanhead"><b>Performance (Lighthouse)</b><span class="small">URL principal da 1a interacao</span></div><label>URL a testar</label><div class="importrow"><input class="search" id="perfUrl" value="'+esc(main)+'" style="flex:1;min-width:320px"><button id="perfRun">Rodar no Lighthouse (PageSpeed)</button></div><div class="small">Abre o Lighthouse na nuvem e gera o relatorio completo. Local: <code>npx lighthouse URL --view</code></div><div class="importrow" style="margin-top:12px"><label class="imp">Importar relatorio Lighthouse (.json ou .html)<input type="file" id="lhFile" accept=".json,.html,application/json" style="display:none"></label>'+(lh?'<span class="small">relatorio importado ('+esc(lh.url||'')+')</span>':'<span class="small">nenhum relatorio importado</span>')+'</div></div>';if(lh)h+=lhSectionHtml(lh);else h+='<div class="empty">Rode o Lighthouse (botao acima) e depois importe o JSON ou HTML para ver scores, Core Web Vitals e oportunidades. Ou use o PageSpeed para o relatorio completo online.</div>';host.innerHTML=h;var pr=$('perfRun');if(pr)pr.addEventListener('click',function(){var u=($('perfUrl').value||'').trim();if(!u){alert('Informe a URL.');return;}if(!/^https?:/i.test(u))u='https://'+u;window.open('https://pagespeed.web.dev/analysis?url='+encodeURIComponent(u),'_blank');});var lf=$('lhFile');if(lf)lf.addEventListener('change',function(){var fl=lf.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){try{var content=r.result;var isJson=/^\s*\{/.test(content);if(isJson){__lh=parseLighthouse(JSON.parse(content));}else{__lh=parseLighthouseHtml(content);}if(!__lh){alert('Nao consegui ler o relatorio Lighthouse (formato invalido).');return;}renderPerf();}catch(e){alert('Nao consegui ler o relatorio Lighthouse: '+e);}};r.readAsText(fl);});}
+function renderSecurity(audit){var host=$('pane-sec');var order={critico:0,alto:1,medio:2,baixo:3,info:4},labels={critico:'CRITICO',alto:'ALTO',medio:'MEDIO',baixo:'BAIXO',info:'INFO'};var zap=__zap;var counts={critico:0,alto:0,medio:0,baixo:0,info:0};audit.findings.forEach(function(f){counts[f.sev]=(counts[f.sev]||0)+1;});if(zap){zap.alerts.forEach(function(a){counts[a.sev]=(counts[a.sev]||0)+(a.count||1);});}var total=audit.findings.length+(zap?zap.total:0);var sum='';['critico','alto','medio','baixo','info'].forEach(function(sv){sum+='<span class="sevpill '+sv+'">'+labels[sv]+': '+(counts[sv]||0)+'</span>';});var h='<div class="scanpanel"><div class="scanhead"><b>Scan de seguranca consolidado</b><span class="small">'+total+' achado(s) '+(zap?'(sessao + OWASP ZAP)':'(sessao)')+'</span></div><div class="secsummary">'+sum+'</div><div class="importrow"><label class="imp" data-testid="btn-import-zap">Importar relatorio OWASP ZAP<input type="file" id="zapFile" data-testid="input-zap" accept=".html,.json,.xml" style="display:none"></label>'+(zap?'<span class="small">ZAP: '+zap.total+' alertas / '+zap.alerts.length+' tipos ('+zap.source+')</span>':'<span class="small">nenhum relatorio ZAP importado</span>')+'</div></div>';h+=credboxHtml(audit.creds);if(zap)h+=zapSectionHtml(zap);h+='<h3 style="margin:22px 0 8px">Achados da sessao capturada</h3>';if(!audit.findings.length){h+='<div class="empty">Nenhum achado nas heuristicas da sessao.</div>';}else{var sorted=audit.findings.slice().sort(function(a,b){return order[a.sev]-order[b.sev];});h+='<div class="findlist">';sorted.forEach(function(f){h+=findingHtml(f,labels);});h+='</div>';}host.innerHTML=h;wireCredReveal(host,audit.creds);var zf=$('zapFile');if(zf){zf.addEventListener('change',function(){var fl=zf.files[0];if(!fl)return;var r=new FileReader();r.onload=function(){try{__zap=/\.json$/i.test(fl.name)?parseZapJson(JSON.parse(r.result)):parseZapHtml(r.result);setTabBadge('sec',audit.findings.length+__zap.total);renderSecurity(audit);}catch(e){alert('Nao consegui ler o relatorio ZAP: '+e);}};r.readAsText(fl);});}}
+function parseLighthouse(o){var cats=o.categories||{};function C(k){return cats[k]&&cats[k].score!=null?Math.round(cats[k].score*100):null;}var scores={performance:C('performance'),accessibility:C('accessibility'),'best-practices':C('best-practices'),seo:C('seo'),pwa:C('pwa')};var au=o.audits||{};function metric(k){var a=au[k];return a?{title:a.title,display:a.displayValue,score:a.score}:null;}var vitals={lcp:metric('largest-contentful-paint'),fcp:metric('first-contentful-paint'),cls:metric('cumulative-layout-shift'),tbt:metric('total-blocking-time'),si:metric('speed-index'),tti:metric('interactive')};var opps=[];Object.keys(au).forEach(function(k){var a=au[k];if(a&&a.details&&a.details.type==='opportunity'&&a.numericValue>0&&a.score!=null&&a.score<1){opps.push({title:a.title,ms:Math.round(a.numericValue),display:a.displayValue});}});opps.sort(function(x,y){return y.ms-x.ms;});
+  // Screenshots capturados (data URIs) e dados do treemap de JS — como no DevTools
+  function shot(k){var a=au[k];return (a&&a.details&&a.details.data)?a.details.data:null;}
+  var finalScreenshot=shot('final-screenshot');
+  var filmstrip=[];var stn=au['screenshot-thumbnails'];if(stn&&stn.details&&stn.details.items){filmstrip=stn.details.items.filter(function(it){return it&&it.data;}).map(function(it){return {data:it.data,timing:it.timing};});}
+  var treemap=null;var tm=au['script-treemap-data'];if(tm&&tm.details){treemap=tm.details.nodes||tm.details.items||null;}
+  return {scores:scores,vitals:vitals,opps:opps.slice(0,8),url:(o.finalDisplayedUrl||o.finalUrl||o.requestedUrl||''),finalScreenshot:finalScreenshot,filmstrip:filmstrip,treemap:treemap};}
+// Le o relatorio HTML do Lighthouse/PageSpeed usando o markup padrao do renderer (.lh-*).
+// Funciona tanto para um relatorio Lighthouse "puro" quanto para a pagina salva do pagespeed.web.dev,
+// pois ambos embutem os gauges de categoria (.lh-gauge__wrapper) e as metricas (.lh-metric).
+function parseLighthouseHtml(html){try{
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  // 1) Scores por categoria: cada gauge e um <a href="...#categoria"> com um .lh-gauge__percentage
+  var scores={};
+  doc.querySelectorAll('a.lh-gauge__wrapper[href*="#"]').forEach(function(w){
+    var cat=(w.getAttribute('href')||'').split('#').pop();
+    if(!cat||scores[cat]!==undefined)return; // primeira ocorrencia vence (evita duplicatas)
+    var pct=w.querySelector('.lh-gauge__percentage');
+    var txt=pct?(pct.textContent||'').trim():'';
+    var num=parseInt((txt||'').replace(/\D/g,''));
+    scores[cat]=(txt&&!isNaN(num))?num:null; // null quando o gauge veio com "Erro!"
+  });
+  // 2) Core Web Vitals / metricas: <div class="lh-metric" id="..."> com __title e __value
+  var idMap={'largest-contentful-paint':'lcp','first-contentful-paint':'fcp','cumulative-layout-shift':'cls','total-blocking-time':'tbt','speed-index':'si','interactive':'tti'};
+  var vitals={};
+  doc.querySelectorAll('.lh-metric').forEach(function(el){
+    var key=idMap[el.id];if(!key||vitals[key])return;
+    var title=(el.querySelector('.lh-metric__title')||{}).textContent||el.id;
+    var val=(el.querySelector('.lh-metric__value')||{}).textContent||'';
+    vitals[key]={title:(title||'').trim(),display:(val||'').trim()||'-',score:/error|erro/i.test(val)?0:1};
+  });
+  // 3) URL analisada (varias origens possiveis, incluindo o comentario "saved from url")
+  var url='';
+  var m=(html.match(/saved from url=\(\d+\)([^\s"]+)/)||[])[1];
+  if(m)url=decodeURIComponent(m);
+  var urlEl=doc.querySelector('.lh-topbar__url, a.lh-topbar__url, [data-final-url]');
+  if(!url&&urlEl)url=(urlEl.getAttribute('href')||urlEl.getAttribute('data-final-url')||urlEl.textContent||'').trim();
+  return {scores:scores,vitals:vitals,opps:[],url:url};
+}catch(e){return null;}}
+function fmtKB(b){b=b||0;return b>=1048576?(b/1048576).toFixed(1)+' MB':(b/1024).toFixed(1)+' KB';}
+function tmShort(n){n=String(n||'');var q=n.split('?')[0];var parts=q.split('/');return parts[parts.length-1]||q||n;}
+function openLightbox(src){if(!src)return;var d=document.createElement('div');d.className='lightbox';var img=document.createElement('img');img.src=src;d.appendChild(img);d.addEventListener('click',function(){d.remove();});document.body.appendChild(d);}
+function renderTreemap(nodes,container,crumb){
+  crumb=crumb||[];nodes=nodes||[];
+  var total=nodes.reduce(function(a,n){return a+(n.resourceBytes||0);},0)||1;
+  var sorted=nodes.slice().sort(function(a,b){return (b.resourceBytes||0)-(a.resourceBytes||0);});
+  var h='<div class="tmbar"><button class="sec" id="tmRoot">Raiz</button>';
+  crumb.forEach(function(c,i){h+='<span class="small">/</span><button class="sec" data-crumb="'+i+'">'+esc(tmShort(c.name))+'</button>';});
+  h+='<span class="small">'+fmtKB(total)+' • '+nodes.length+' item(ns)</span></div><div class="treemap">';
+  sorted.forEach(function(n,i){
+    var pct=Math.max(6,Math.round((n.resourceBytes||0)/total*100));
+    var unused=n.unusedBytes?Math.min(100,Math.round(n.unusedBytes/(n.resourceBytes||1)*100)):0;
+    var kids=n.children&&n.children.length;
+    h+='<div class="tmtile" data-idx="'+i+'" style="flex:'+(n.resourceBytes||1)+' 1 '+pct+'%" title="'+esc(n.name)+'"><div class="tmb" style="width:'+unused+'%"></div><div class="tmt">'+esc(tmShort(n.name))+(kids?' ▸':'')+'</div><div class="tms">'+fmtKB(n.resourceBytes)+(unused?(' • '+unused+'% n/ usado'):'')+'</div></div>';
+  });
+  h+='</div><div class="small" style="margin-top:6px">A faixa vermelha indica bytes baixados e nao utilizados. Clique num item com ▸ para abrir os modulos.</div>';
+  container.innerHTML=h;
+  container.querySelectorAll('.tmtile').forEach(function(t){t.addEventListener('click',function(){var n=sorted[+t.dataset.idx];if(n.children&&n.children.length)renderTreemap(n.children,container,crumb.concat([n]));});});
+  var root=container.querySelector('#tmRoot');if(root)root.addEventListener('click',function(){renderTreemap(__lh.treemap,container,[]);});
+  container.querySelectorAll('[data-crumb]').forEach(function(b){b.addEventListener('click',function(){var i=+b.dataset.crumb;renderTreemap(crumb[i].children,container,crumb.slice(0,i+1));});});
+}
+function lhSectionHtml(lh){function col(s){if(s==null)return 'var(--mut)';return s>=90?'#0cce6b':(s>=50?'#ffa400':'#ff4e42');}var names={performance:'Performance',accessibility:'Acessibilidade','best-practices':'Boas praticas',seo:'SEO',pwa:'PWA'};var h='<h3 style="margin:22px 0 8px">Scores Lighthouse</h3><div class="scorewrap">';Object.keys(names).forEach(function(k){var sc=lh.scores[k];h+='<div class="scorecard"><div class="ring" style="--c:'+col(sc)+'"><span>'+(sc==null?'-':sc)+'</span></div><div class="small">'+names[k]+'</div></div>';});h+='</div>';
+  if(lh.filmstrip&&lh.filmstrip.length){h+='<h3 style="margin:22px 0 8px">Filmstrip (carregamento)</h3><div class="lh-film">';lh.filmstrip.forEach(function(f){var t=f.timing!=null?(f.timing>=1000?(f.timing/1000).toFixed(1)+'s':f.timing+'ms'):'';h+='<div style="text-align:center"><img src="'+esc(f.data)+'" alt="frame '+esc(t)+'"><div class="small">'+esc(t)+'</div></div>';});h+='</div>';}
+  var vn={lcp:'LCP',fcp:'FCP',cls:'CLS',tbt:'TBT',si:'Speed Index',tti:'TTI'};h+='<h3 style="margin:22px 0 8px">Core Web Vitals</h3><table><thead><tr><th>Metrica</th><th>Valor</th></tr></thead><tbody>';Object.keys(vn).forEach(function(k){var v=lh.vitals[k];if(v)h+='<tr><td>'+vn[k]+' - '+esc(v.title||'')+'</td><td><b>'+esc(v.display||'-')+'</b></td></tr>';});h+='</tbody></table>';
+  if(lh.finalScreenshot){h+='<h3 style="margin:22px 0 8px">Screenshot final</h3><img class="lh-shot" id="lhShot" data-testid="lh-shot" src="'+esc(lh.finalScreenshot)+'" alt="screenshot final"><div class="small">Clique para ampliar.</div>';}
+  if(lh.treemap&&lh.treemap.length){h+='<h3 style="margin:22px 0 8px">Treemap de JavaScript</h3><div class="tmbar"><button class="sec" id="tmBtn" data-testid="btn-treemap">Ver Treemap</button><span class="small">'+lh.treemap.length+' script(s) — navegue como no DevTools</span></div><div id="tmWrap" data-testid="treemap-wrap"></div>';}
+  if(lh.opps.length){h+='<h3 style="margin:22px 0 8px">Principais oportunidades</h3><table><thead><tr><th>Oportunidade</th><th>Economia estimada</th></tr></thead><tbody>';lh.opps.forEach(function(o){h+='<tr><td>'+esc(o.title)+'</td><td>'+esc(o.display||(o.ms+' ms'))+'</td></tr>';});h+='</tbody></table>';}return h;}
+function renderPerf(){var host=$('pane-perf');if(!host)return;var meta=(window.decoded&&window.decoded.meta)||{};var main=meta.url||'';if(!main&&window.decoded&&window.decoded.sensitive&&window.decoded.sensitive.network&&window.decoded.sensitive.network[0])main=window.decoded.sensitive.network[0].url||'';var lh=__lh;var h='<div class="scanpanel"><div class="scanhead"><b>Performance (Lighthouse)</b><span class="small">URL principal da 1a interacao</span></div><label>URL a testar</label><div class="importrow"><input class="search" id="perfUrl" data-testid="input-perf-url" value="'+esc(main)+'" style="flex:1;min-width:320px"><button id="perfRun" data-testid="btn-pagespeed">Rodar no Lighthouse (PageSpeed)</button></div><div class="small">Abre o Lighthouse na nuvem e gera o relatorio completo. Local: <code>npx lighthouse URL --view</code></div><div class="importrow" style="margin-top:12px"><label class="imp" data-testid="btn-import-lh-json">Importar JSON do Lighthouse (DevTools)<input type="file" id="lhJsonFile" data-testid="input-lh-json" accept=".json,application/json" style="display:none"></label><label class="imp" data-testid="btn-import-lh-html">Importar HTML do PageSpeed (.html / .htm)<input type="file" id="lhFile" data-testid="input-lh-html" accept=".json,.html,.htm,application/json" style="display:none"></label>'+(lh?'<span class="small">relatorio importado ('+esc(lh.url||'')+')</span>':'<span class="small">nenhum relatorio importado</span>')+'</div></div>';if(lh)h+=lhSectionHtml(lh);else h+='<div class="empty">Rode o Lighthouse (botao acima) e depois importe o JSON ou HTML para ver scores, Core Web Vitals e oportunidades. Ou use o PageSpeed para o relatorio completo online.</div>';host.innerHTML=h;var pr=$('perfRun');if(pr)pr.addEventListener('click',function(){var u=($('perfUrl').value||'').trim();if(!u){alert('Informe a URL.');return;}if(!/^https?:/i.test(u))u='https://'+u;window.open('https://pagespeed.web.dev/analysis?url='+encodeURIComponent(u),'_blank');});function loadLh(fl,forceJson){if(!fl)return;var r=new FileReader();r.onload=function(){try{var content=r.result;var isJson=forceJson||/^\s*\{/.test(content);__lh=isJson?parseLighthouse(JSON.parse(content)):parseLighthouseHtml(content);if(!__lh){alert('Nao consegui ler o relatorio Lighthouse (formato invalido).');return;}renderPerf();}catch(e){alert('Nao consegui ler o relatorio Lighthouse: '+e);}};r.readAsText(fl);}
+  var lf=$('lhFile');if(lf)lf.addEventListener('change',function(){loadLh(lf.files[0],false);});
+  var lj=$('lhJsonFile');if(lj)lj.addEventListener('change',function(){loadLh(lj.files[0],true);});
+  var tb=$('tmBtn');if(tb)tb.addEventListener('click',function(){var w=$('tmWrap');if(!w||!__lh)return;if(w.dataset.open==='1'){w.innerHTML='';w.dataset.open='';tb.textContent='Ver Treemap';}else{renderTreemap(__lh.treemap,w,[]);w.dataset.open='1';tb.textContent='Ocultar Treemap';}});
+  var ls=$('lhShot');if(ls)ls.addEventListener('click',function(){openLightbox(ls.getAttribute('src'));});
+  host.querySelectorAll('.lh-film img').forEach(function(im){im.addEventListener('click',function(){openLightbox(im.getAttribute('src'));});});
+}
 </script></div></body></html>

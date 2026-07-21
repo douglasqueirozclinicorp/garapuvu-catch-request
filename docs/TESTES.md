@@ -1,186 +1,92 @@
-# Testes e2e - Garapuvu
+# Testes e2e — Garapuvu
 
-Suite completa de testes de interface end-to-end (e2e) para validar todas as funcionalidades do Garapuvu de captura e análise de requisições.
+Suíte de testes de interface end-to-end (Playwright) que valida as funcionalidades do analisador Garapuvu.
 
-## Objetivo dos testes
+Arquivo único: [tests/garapuvu.e2e.spec.js](../tests/garapuvu.e2e.spec.js) (ESM, JavaScript).
 
-Os testes cobrem os seguintes cenários:
-
-### 1. **Interface Inicial**
-- Abertura da página do analisador
-- Validação de botões e inputs desabilitados até preenchimento
-
-### 2. **Descriptografia de Sessões**
-- Upload de arquivo JSON de sessão capturada
-- Preenchimento de chave de descriptografia
-- Descriptografia com sucesso usando chave correta
-- Rejeição de chave incorreta com mensagem de erro
-
-### 3. **Visualização de Dados**
-- **Requisições**: exibição de tabela com métodos, status, hosts, endpoints e duração
-- **Console**: exibição de mensagens de log, warning, error, etc.
-- **Cookies**: exibição de cookies acessíveis (não HttpOnly)
-- **localStorage**: exibição de dados armazenados no localStorage
-- **sessionStorage**: exibição de dados armazenados no sessionStorage
-
-### 4. **Análise de Segurança**
-- Auditoria automática de vulnerabilidades (OWASP Top 10)
-- Detecção de credenciais expostas (passwords, tokens, JWT)
-- Análise de headers de segurança
-- Importação de relatórios OWASP ZAP (HTML)
-
-### 5. **Análise de Performance**
-- Importação de relatórios Lighthouse (JSON e HTML)
-- Exibição de Core Web Vitals
-- Exibição de scores de performance, acessibilidade, SEO, etc.
-
-### 6. **Filtros e Buscas**
-- Filtro de requisições por domínio
-- Busca por texto em requisições
-
-### 7. **Export de Dados**
-- Download de JSON descriptografado
-
-## Arquivos de Teste
-
-- [tests/garapuvu.e2e.spec.ts](tests/garapuvu.e2e.spec.ts): Suite completa com 17 testes
-
-## Fixtures Utilizadas
-
-- `fixtures/garapuvu-sessao-TESTE-seguranca.json`: Sessão com dados de segurança sensíveis
-- `fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json`: Sessão de sistema real
-- `fixtures/2026-07-21-ZAP-Report-.html`: Relatório de segurança OWASP ZAP
-- `fixtures/oci-layout 2.htm`: Relatório de performance Lighthouse (HTML)
-
-## Configuração
-
-### Instalação de dependências
+## Pré-requisitos
 
 ```bash
-npm install
+npm install                # dependências (inclui @playwright/test, dotenv, cross-env)
+npm run install:browsers   # baixa os navegadores do Playwright (só na 1ª vez)
+cp .env.example .env        # configure a TEAM_KEY (chave do time)
 ```
 
-### Executar todos os testes
+> Os testes leem a chave de `process.env.TEAM_KEY` (arquivo `.env`). Sem ela, a suíte falha
+> logo no início com uma mensagem explicando como configurar.
 
+## Como os testes rodam
+- O `playwright.config.js` sobe automaticamente um **servidor HTTP local** (`python3 -m http.server 8000`)
+  e serve os arquivos estáticos do projeto.
+- Os testes acessam a interface via `http://localhost:8000/src/garapuvu-analisador-requests.html`.
+- As fixtures (`.json`, `.html`, `.htm`) são enviadas via `setInputFiles`, direto do disco.
+
+## Scripts disponíveis
+
+| Script | O que faz |
+| --- | --- |
+| `npm test` | Roda toda a suíte, headless, em todos os navegadores configurados |
+| `npm run test:chromium` | Só Chromium |
+| `npm run test:firefox` | Só Firefox |
+| `npm run test:webkit` | Só WebKit (Safari) |
+| `npm run test:mobile` | Viewports mobile (Pixel 5 + iPhone 12) |
+| `npm run test:headed` | Chromium **visível**, 1 worker, em câmera lenta (`SLOWMO=1500ms`) — ideal para acompanhar |
+| `npm run test:ui` | Modo UI interativo do Playwright |
+| `npm run test:debug` | Modo debug (inspector) |
+| `npm run test:report` | Abre o último relatório HTML |
+
+### Rodar um teste específico
 ```bash
-npm test
+npx playwright test -g "importar relatorio OWASP ZAP"
 ```
 
-### Executar com modo UI (interativo)
+## Seletores: data-testid
+Os componentes da interface expõem atributos `data-testid` (ex.: `input-file`, `input-key`,
+`btn-analisar`, `tab-perf`, `pane-sec`, `input-lh-json`, `btn-treemap`, `lh-shot`).
+Os testes usam `page.getByTestId(...)`, o que deixa a suíte resistente a mudanças de layout/CSS.
 
+## Cenários cobertos (18 testes)
+**Onboarding e interface inicial**
+1. Guia de 3 passos + ajuda de importação (OWASP/PageSpeed/Lighthouse) visíveis e expansíveis.
+2. Botão **Analisar** desabilitado sem arquivo + chave; habilitado quando ambos preenchidos.
+3. Rejeição de chave incorreta (mensagem de erro).
+
+**Descriptografia e navegação**
+4. Descriptografia com chave válida + metadados.
+5. Presença de todas as abas.
+6. Navegação entre Requisições, Console, Cookies, localStorage e sessionStorage.
+7. Filtro de requisições por texto e por domínio.
+8. Download do JSON descriptografado.
+
+**Segurança**
+9. Scan consolidado (pills de severidade) e caça-credenciais com valores mascarados.
+10. Import de relatório **OWASP ZAP (HTML)** consolidando alertas.
+
+**Performance (PageSpeed / Lighthouse)**
+11. Dois botões de import + botão online do PageSpeed visíveis.
+12. Import do **HTML do PageSpeed**.
+13. Import do **JSON do Lighthouse (DevTools)** com scores reais (Performance=27).
+14. **Filmstrip** e **screenshot final** ampliável (lightbox).
+15. Navegação no **treemap de JavaScript** (drill-down nos módulos).
+
+## Fixtures utilizadas
+- `fixtures/garapuvu-sessao-TESTE-seguranca.json` — sessão com dados sensíveis.
+- `fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json` — sessão de sistema real.
+- `fixtures/2026-07-21-ZAP-Report-.html` — relatório OWASP ZAP.
+- `fixtures/pagespeed-report-login.htm` — relatório PageSpeed/Lighthouse HTML (exemplo com erro de captura).
+- `fixtures/lighthouse-devtools-login.json` — relatório Lighthouse JSON do DevTools (scores reais, filmstrip, screenshot e treemap).
+
+## Integração contínua
+O workflow `.github/workflows/e2e.yml` roda a suíte a cada push/PR na `main`.
+Requer o secret **`TEAM_KEY`** no repositório (Settings → Secrets and variables → Actions).
+
+## Artefatos gerados
+- `playwright-report/` — relatório HTML (gitignored).
+- `test-results/` — screenshots/traces de falhas (gitignored).
+
+## Dicas de debugging
 ```bash
-npm run test:ui
-```
-
-### Executar com modo debug
-
-```bash
-npm run test:debug
-```
-
-### Executar no modo headed (com navegador visível)
-
-```bash
-npm run test:headed
-```
-
-### Executar teste específico
-
-```bash
-npx playwright test tests/garapuvu.e2e.spec.ts -g "deve exibir aba de Requisições"
-```
-
-## O que cada teste valida
-
-1. **deve abrir a página do analisador**
-   - Verifica título e componentes principais
-
-2. **deve validar que o botão Analisar começa desabilitado**
-   - Garante que não há análise sem arquivo e chave
-
-3. **deve ativar o botão Analisar quando arquivo e chave são preenchidos**
-   - Valida lógica de ativação do botão
-
-4. **deve descriptografar e exibir dados de sessão de segurança**
-   - Teste principal: valida fluxo completo de descriptografia
-
-5. **deve exibir aba de Requisições com dados capturados**
-   - Valida tabela de requisições com colunas corretas
-
-6. **deve exibir aba de Console com mensagens capturadas**
-   - Verifica que mensagens de log aparecem
-
-7. **deve exibir aba de Cookies com dados de sessão**
-   - Valida exibição de cookies em tabela
-
-8. **deve exibir aba de Segurança com achados de auditoria**
-   - Verifica que análise de segurança é realizada
-
-9. **deve permitir importação de relatório OWASP ZAP**
-   - Testa import de arquivo HTML de segurança
-
-10. **deve permitir importação de relatório Lighthouse (HTML)**
-    - Testa novo suporte para HTML do PageSpeed
-
-11. **deve exibir localStorage quando disponível**
-    - Valida dados de localStorage
-
-12. **deve exibir sessionStorage quando disponível**
-    - Valida dados de sessionStorage
-
-13. **deve permitir download de JSON descriptografado**
-    - Verifica disponibilidade do botão de download
-
-14. **deve filtrar requisições por domínio**
-    - Testa select de filtragem por host
-
-15. **deve buscar/filtrar requisições por texto**
-    - Testa input de busca
-
-16. **deve rejeitar chave incorreta**
-    - Valida mensagem de erro com chave errada
-
-## Comportamento esperado
-
-- Todos os testes devem passar com as fixtures fornecidas
-- Tempo total: aproximadamente 30-40 segundos (testes sequenciais)
-- Os testes criamscreenshots automaticamente em caso de falha
-- Relatório HTML é gerado em `playwright-report/`
-
-## Estrutura do teste
-
-Cada teste segue o padrão:
-1. Acessa a página do analisador
-2. Faz upload de arquivo(s)
-3. Preenche chave de descriptografia
-4. Clica no botão de análise
-5. Valida resultado esperado com `expect()`
-
-## Arquivos gerados após execução
-
-- `playwright-report/`: Relatório HTML com detalhes dos testes
-- `test-results/`: Screenshots de falhas
-- `.auth/`: Cache de autenticação (se necessário)
-
-## Dicas para debugging
-
-### Ver saída detalhada:
-```bash
-npm test -- --verbose
-```
-
-### Pausar em um ponto específico:
-```bash
-// Adicionar no teste:
-await page.pause();
-```
-
-### Executar apenas um bloco de testes:
-```bash
-npx playwright test -g "Segurança"
-```
-
-### Gerar relatório após execução:
-```bash
-npx playwright show-report
+npm test -- --debug          # inspector
+npx playwright test --ui     # modo UI
+# no teste: await page.pause();
 ```
