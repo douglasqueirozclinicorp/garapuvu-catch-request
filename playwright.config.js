@@ -24,8 +24,11 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* 1 worker no CI para estabilidade. */
   workers: process.env.CI ? 1 : undefined,
-  /* Relatorio HTML (abra com: npm run test:report). */
-  reporter: 'html',
+  /* Relatorio HTML (abra com: npm run test:report). No CI tambem loga no console
+     e nunca tenta abrir o navegador, para o report virar artefato limpo. */
+  reporter: process.env.CI
+    ? [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]]
+    : [['html', { open: 'never', outputFolder: 'playwright-report' }]],
 
   /* Configuracoes compartilhadas por todos os projetos. */
   use: {

@@ -151,7 +151,17 @@ Como as fixtures são cifradas com a chave do time e o `.env` não é versionado
 1. GitHub → **Settings → Secrets and variables → Actions → New repository secret**.
 2. Nome: `TEAM_KEY`. Valor: a chave do time.
 
-O relatório HTML de cada execução fica disponível como artefato (`playwright-report`).
+### Relatório do Playwright no CI
+Cada execução do workflow gera o **relatório HTML** e o publica como artefato:
+
+1. Abra a execução em **Actions** → job **Testes e2e**.
+2. Na aba **Summary**, seção **Artifacts**, baixe **`playwright-report`** (e, em caso de falha, **`test-results`** com traces/screenshots).
+3. Descompacte e abra o `index.html`, ou rode:
+   ```bash
+   npx playwright show-report caminho/da/pasta-extraida
+   ```
+
+O artefato fica retido por 14 dias.
 
 ## Considerações de segurança
 - Dados sensíveis são cifrados com **AES‑256‑GCM** (chave via PBKDF2‑SHA256, 150k iterações).

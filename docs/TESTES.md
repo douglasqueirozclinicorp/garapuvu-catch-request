@@ -80,6 +80,12 @@ Os testes usam `page.getByTestId(...)`, o que deixa a suíte resistente a mudan�
 O workflow `.github/workflows/e2e.yml` roda a suíte a cada push/PR na `main`.
 Requer o secret **`TEAM_KEY`** no repositório (Settings → Secrets and variables → Actions).
 
+### Relatório como artefato
+Toda execução publica o **relatório HTML do Playwright** como artefato:
+- **Actions** → execução → **Summary** → **Artifacts** → baixe **`playwright-report`**.
+- Em falhas, também sai **`test-results`** (traces e screenshots).
+- Para abrir localmente: descompacte e `npx playwright show-report <pasta>` (ou abra o `index.html`).
+
 ## Artefatos gerados
 - `playwright-report/` — relatório HTML (gitignored).
 - `test-results/` — screenshots/traces de falhas (gitignored).
