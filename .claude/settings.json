@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -oE \"\\(performance|lighthouse\\)[^\\\\\"]{0,30}\" \"fixtures/oci-layout 2.htm\")",
+      "Bash(grep -oE '\"\\(numericValue|displayValue|score\\)\":[^,}]{1,40}' \"oci-layout 2.htm\")",
+      "Bash(grep -oE \"AF_initDataCallback\\\\\\(\\\\{.{0,120}\" \"oci-layout 2.htm\")",
+      "Bash(grep -oE 'id=\"\\(performance|accessibility|best-practices|seo|pwa\\)\"[^>]{0,60}' \"oci-layout 2.htm\")",
+      "Bash(grep -oE '<a class=\"lh-gauge__wrapper[^\"]*\" href=\"https://pagespeed.web.dev/#performance\">.{0,400}' \"oci-layout 2.htm\")",
+      "Bash(grep -oE '<div class=\"lh-metric lh-metric--error\" id=\"largest-contentful-paint\">.{0,300}' \"oci-layout 2.htm\")",
+      "Bash(awk 'NR>=300 && NR<=320{printf \"%d: %s\\\\n\", NR, substr\\($0,1,70\\)}' src/garapuvu-analisador-requests.html)",
+      "Bash(mv \"oci-layout 2.htm\" \"pagespeed-report-login.htm\")",
+      "Bash(mv \"oci-layout 2_files\" \"pagespeed-report-login_files\")",
+      "Bash(mv \"sistema.clinicorp.com-20260721T133807.json\" \"lighthouse-devtools-login.json\")",
+      "Bash(chmod 644 \"lighthouse-devtools-login.json\")",
+      "Bash(python3 -c \"import json;d=json.load\\(open\\('lighthouse-devtools-login.json'\\)\\);print\\({k:round\\(v['score']*100\\) if v.get\\('score'\\) is not None else None for k,v in d.get\\('categories',{}\\).items\\(\\)}\\)\")",
+      "Bash(awk 'NR>=95 && NR<=112{printf \"%d: %s\\\\n\", NR, $0}' src/garapuvu-analisador-requests.html)",
+      "Bash(awk 'NR>=108 && NR<=120{printf \"%d: %s\\\\n\", NR, $0}' src/garapuvu-analisador-requests.html)"
+    ]
+  }
+}
