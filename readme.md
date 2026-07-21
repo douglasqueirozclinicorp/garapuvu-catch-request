@@ -146,10 +146,16 @@ O workflow [.github/workflows/e2e.yml](.github/workflows/e2e.yml) roda a suíte 
 - a cada **push na `main`** (inclui merges de PR aprovados);
 - em **PRs abertos contra a `main`** (pega problemas antes do merge).
 
-Como as fixtures são cifradas com a chave do time e o `.env` não é versionado, é preciso cadastrar a chave como **secret** do repositório:
+> ⚠️ **Fez um fork? Você precisa configurar o secret no seu repositório** — secrets **não** são copiados junto com o fork. Sem isso, o workflow falha de propósito com a mensagem `Secret TEAM_KEY nao configurado`.
 
-1. GitHub → **Settings → Secrets and variables → Actions → New repository secret**.
-2. Nome: `TEAM_KEY`. Valor: a chave do time.
+Como as fixtures são cifradas com a chave do time e o `.env` não é versionado, cadastre a chave como **Repository secret**:
+
+1. No seu repositório: **Settings → Secrets and variables → Actions**.
+2. Aba **Secrets** → seção **Repository secrets** → botão **New repository secret**.
+3. **Name:** `TEAM_KEY` (exatamente assim) · **Secret:** a chave do time.
+4. Se o workflow já falhou antes, abra a execução em **Actions** e use **Re-run jobs**.
+
+> ❗ Cadastre em **Repository secrets**, **não** em *Environment secrets*. Um secret criado dentro de um *Environment* só é visível para jobs que declaram `environment:` — este workflow lê `${{ secrets.TEAM_KEY }}` no nível do job, então precisa ser um **repository secret**.
 
 ### Relatório do Playwright no CI
 Cada execução do workflow gera o **relatório HTML** e o publica como artefato:
