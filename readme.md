@@ -34,6 +34,36 @@ catch-request-garapuvu/
 3. Clique em **PARAR e Exportar** → baixa um `garapuvu-sessao-<host>-....json` criptografado.
 4. Abra o arquivo em `src/garapuvu-analisador-requests.html`, informe a **chave do time** e clique em **Analisar**.
 
+## Guia de uso completo (passo a passo)
+Fluxo ponta a ponta, do problema ao diagnóstico:
+
+1. **Preparar (uma vez):** abra `src/garapuvu-processo-captura.html` e arraste os favoritos **▶ INICIAR** e **■ PARAR** para a barra de favoritos do navegador.
+2. **Capturar:** na aba onde o problema acontece, clique em **INICIAR** → reproduza o problema (se o erro é no carregamento, recarregue a página) → clique em **PARAR**. Um `garapuvu-sessao-<host>-....json` **criptografado** é baixado.
+3. **Abrir:** em `src/garapuvu-analisador-requests.html`, faça upload do `.json`, informe a **TEAM_KEY** e clique em **Analisar**.
+4. **Diagnosticar:** navegue pelas abas (veja a tabela abaixo). Comece por **Segurança** e **Requisições**.
+5. **(Opcional) Enriquecer com relatórios externos:**
+   - Aba **Segurança** → **Importar relatório OWASP ZAP** (arquivo `.html`/`.json` gerado no ZAP).
+   - Aba **Performance** → **Importar JSON do Lighthouse (DevTools)** (`.json` do F12) ou **Importar HTML do PageSpeed** (`.htm`).
+6. **(Opcional) Exportar:** clique em **Baixar JSON decifrado** para guardar/compartilhar a sessão já legível.
+
+### Quais arquivos importar em cada aba
+| Aba | Botão | Arquivo | Onde gerar |
+| --- | --- | --- | --- |
+| Segurança | Importar relatório OWASP ZAP | `.html` ou `.json` | OWASP ZAP → *Report → Generate Report* |
+| Performance | Importar JSON do Lighthouse (DevTools) | `.json` | Chrome F12 → aba Lighthouse → *Export → Save as JSON* |
+| Performance | Importar HTML do PageSpeed | `.htm` / `.html` | pagespeed.web.dev → *Ctrl/Cmd+S* (página completa) |
+
+### O que cada aba mostra
+| Aba | Conteúdo |
+| --- | --- |
+| **Segurança** | Scan consolidado (sessão + ZAP) com pills de severidade; **caça-credenciais** (senhas/tokens sob chaves sensíveis, mascarados); achados (HTTP sem TLS, dados sensíveis na URL, cookies sem flags, CORS `*`, JWT com `alg=none`/PII, headers de segurança ausentes…). |
+| **Performance** | Scores Lighthouse (Performance, Acessibilidade, Boas práticas, SEO, PWA), **Core Web Vitals**, **filmstrip**, **screenshot final** (ampliável) e **treemap** de JavaScript navegável, além das principais oportunidades. |
+| **Requisições** | Tabela de fetch/XHR (método, status, domínio, endpoint, duração), com filtro por domínio e por texto; clique numa linha para ver headers e body de request/response. |
+| **Console** | Mensagens de `log`/`info`/`warn`/`error`, erros de recurso (4xx/5xx) e *unhandled rejections*, com filtro por nível e busca. |
+| **Cookies** | Cookies acessíveis por script (não `HttpOnly`); botão para **decodificar JWT** quando aplicável. |
+| **localStorage / sessionStorage** | Pares chave/valor armazenados na origem, com JSON formatado. |
+| **Cache** | URLs guardadas no Cache Storage (service worker), por cache. |
+
 ## Chave do time (TEAM_KEY)
 A sessão é cifrada com a chave do time. Por segurança, a chave **não fica no código versionado**:
 
@@ -98,7 +128,7 @@ As duas ferramentas usam **o mesmo motor Lighthouse** (do Google), mas rodam em 
 **Resumo:** use o **DevTools (F12)** para diagnosticar uma página logada do sistema (é o caso do Garapuvu) e o **PageSpeed** quando quiser um número comparável/oficial de uma URL pública. Para a experiência mais rica no analisador (filmstrip, screenshot e treemap), prefira **importar o JSON do DevTools**.
 
 ## Testes (Playwright)
-Veja o guia completo em [docs/TESTES.md](docs/TESTES.md). Resumo:
+Guia completo em [docs/TESTES.md](docs/TESTES.md) e o plano em BDD (Gherkin) em [docs/PLAN-TEST.md](docs/PLAN-TEST.md). Resumo:
 
 ```bash
 npm install                # instala dependências
