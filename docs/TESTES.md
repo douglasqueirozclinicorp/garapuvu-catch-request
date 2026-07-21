@@ -1,6 +1,6 @@
 # Testes e2e - Garapuvu
 
-Suite de testes de interface end-to-end (e2e) para validar as funcionalidades do Garapuvu.
+Suite completa de testes de interface end-to-end (e2e) para validar todas as funcionalidades do Garapuvu de captura e análise de requisições.
 
 ## Objetivo dos testes
 
