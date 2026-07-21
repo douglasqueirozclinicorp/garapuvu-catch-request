@@ -28,3 +28,6 @@ Este fluxo permite que um time:
 
 ## Observação
 Este projeto foi pensado para suporte operacional e diagnóstico de problemas em ambientes web.
+
+## Descriptar
+cieF118sAqHhEuFAPtiuQI1M0dzhzIUE
