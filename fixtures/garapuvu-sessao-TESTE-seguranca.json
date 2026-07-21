@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "capturedAt": "2026-07-21T14:12:07Z",
+    "host": "sistema.clinicorp.com",
+    "url": "https://sistema.clinicorp.com/login",
+    "userAgent": "Mozilla/5.0 Chrome/150.0",
+    "mode": "completo (hooks ativos)",
+    "captureStarted": "2026-07-21T14:11:00Z",
+    "consent": true
+  },
+  "networkSummary": [],
+  "encrypted": {
+    "alg": "AES-GCM",
+    "kdf": "PBKDF2-SHA256",
+    "iter": 150000,
+    "salt": "1jrZqMSUMCfUWJ5eObYebQ==",
+    "iv": "TmAbvAukeUgFZh/H",
+    "data": "mdnD2ob0mP/13Kta+HrzokgPhwOMyQV5SYERJlYlRx3dH2EqWIxDJCBpU10GHwHjKyL6ZAej6y0lpv73K7Wv/dztkvhrBHp45z/Yl39DuJcEIJFwtoB1bQlcqQ7oJ/sc+M7VanUD/AdAP6Fv/mxbRV9+Bvrz6+DPD/FcCcS2CNC2M0qTKaNJOpLToq44n7mPRUkOyjyNEa8caGS1R0uxsxwUC5rfqalpe8xcJ8T6GSfkZBHr5fTPDLmSQ7w2y+NHN2lSGK5UfwfM0N/OA6Zc2248FSImxPI+SVah3+2kHUf75H0+BKtS00BGPmw3GsklMtLz2s36mf7ovbKjyAnvU7NL4pdDSXSc7l+LoDRLRtE4Tzyiw8wtzwL9zTKtuWOGR7vMVXlW9+Q0WLUPcc6XXCg55VVy2LIa5GKvItRloJGAg7pbmWlYyq5IgfZXQBWZA1ltnIeZ+pbrnoi2QsApn8MTK646/ky9Ga7uQuj45DtWh4mswVz7DDvna2D+49EZWHzqTGlAXzpO1idDsROIyBt6UnTItskhQWHMtVGmEGWyhTa83BN/QBA1Q6IY7Q3cok2zm4UrXW4U2pa9GZ6bn2S0beOagifwyfYDT5HG7Xozjz7Kj2kfI4UNjFrPj2ZnnNNT/DDrhxX2VgabWpVQWLK/rurx4N4RBvrUu22qq1zGIN2k0Qoc3d2Au0aCbeM+tVAL0AFj5K/6h9UAq1J6M8zoXMiS+I54fWAyEUapJYCESW+UP7Q6ZVHIkGrBW9AwUI6dYsT8Bf/bXkyrldxXl38Qv7V8lzfvJQj05azGuEskVYzwU41AUuTAd9+JD/q52buqr0v3szTDx4E9uf294uxGGpOAnV1BhPrSlB3Bjmmn3atepo0V/3m8FGbNvZeb2lyxZ4o0RWypXcz3JFRiITqOgt6UtJvKAMTv482eJcyIEqn2yZS7+elCV85soh97NPEU5EJUOlSvEbcQkoWflGUeii7f0sNQjbelTL6kP8QhBmbjRh9KLUbvlwmeGjby+pbnbziRYh0cq6mtn9UCYtb3YiMLrbe5pQw+2jEneYhHLe6TuUXRj3I0QzJON9BUBwqrud0lSo0Bcim8x5vQDH/di1Qao+BeaBdIURkyWvWK9M9/JgkPvZEUSthKwRe4NwRs3/eTh8r6wWFSvkMkFA2Win7rHlwkOLaupLaQhj+U9DSuFkHmfGbLX/gxX1YX8lH+g5jIFHpsAPLtSz0OW8UIQd3b6OU30y0FDliHPMs3aFO7xlFakK3HlqhgiCTvBjDIV0BWGSrDIlQTv0xJYuQVwJoKFPMR2JWvwzSZsSxFT7DjF7cM955dmBFeIK7vFuIJ61Nusd2DecLlX5T/c+MUr/Zj5csM+2kedvhocjjvJLg+2r3uEQhVNYjzU+8O/Xv4u1IU27ilmTjU8QPP/p4V7LNGeaYL8P9bw055eopERJmYEEh6J2GYr66xEcfAJUNoR8N76ql5WcotOZbBc57Bms2RB60WklBWa35FTWxQoRzHXja/a6hTU1POnU9jXOeCDwGfvir4MOF1g4MJzKjyfHf8eTBgtUcLPc3Tv4oCtFz8CJdsh//WviTZwkpUC3GbgssAUxASN2rxVhaaP9T346uawMFkc29k7TI60CukvnFCXw/Otv6J14l7WkTJ7O/U4hv4OiVHhQ259ELn14+SJUYciK1dzE5Wc/Gz+tQkGAeQKHqzSZJVRw6N8ogb3NA0N1YScpWXKXl15kmaFuVuPQTuY+C4R7TdD0U2k39Z46Q6AXJxTCs1HbKqZ9z4xVqIxE1MxWbsgDWHtog7wxC2ytEFBx/Y7iFrrjOo7ZydQnGebezS613MA6PSvqk9QNMwQumEGYRxmP4QegIP53ygvksz2PtOgyKe"
+  }
+}
