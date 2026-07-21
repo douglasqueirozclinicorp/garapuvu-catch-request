@@ -16,17 +16,24 @@ O projeto é composto por:
 - um relatório de segurança OWASP ZAP para comparação e contexto.
 
 ## Arquivos principais
-- [src/garapuvu-processo-captura.html](src/garapuvu-processo-captura.html): interface de apoio ao processo de captura. Explica o fluxo de bookmarklet, o uso do INICIAR/PARAR e o export de dados criptografados.
-- [src/garapuvu-analisador-requests.html](src/garapuvu-analisador-requests.html): interface principal para abrir arquivos capturados, descriptografar, visualizar requisições, console, cookies, storage e executar análises de segurança/performance.
-- [fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json](fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json): fixture de exemplo com dados de uma sessão capturada.
-- [fixtures/garapuvu-sessao-TESTE-seguranca.json](fixtures/garapuvu-sessao-TESTE-seguranca.json): fixture voltada para validar cenários de segurança e exposição de credenciais.
-- [fixtures/2026-07-21-ZAP-Report-.html](fixtures/2026-07-21-ZAP-Report-.html): relatório OWASP ZAP de exemplo para integração na análise de segurança.
-- [readme.md](readme.md): documentação geral do projeto.
+- [src/garapuvu-processo-captura.html](../src/garapuvu-processo-captura.html): interface de apoio ao processo de captura. Explica o fluxo de bookmarklet, o uso do INICIAR/PARAR e o export de dados criptografados.
+- [src/garapuvu-analisador-requests.html](../src/garapuvu-analisador-requests.html): interface principal para abrir arquivos capturados, descriptografar, visualizar requisições, console, cookies, storage e executar análises de segurança/performance.
+- [fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json](../fixtures/garapuvu-sessao-TESTE-sistema.clinicorp.com.json): fixture de exemplo com dados de uma sessão capturada.
+- [fixtures/garapuvu-sessao-TESTE-seguranca.json](../fixtures/garapuvu-sessao-TESTE-seguranca.json): fixture voltada para validar cenários de segurança e exposição de credenciais.
+- [fixtures/2026-07-21-ZAP-Report-.html](../fixtures/2026-07-21-ZAP-Report-.html): relatório OWASP ZAP de exemplo para integração na análise de segurança.
+- [fixtures/pagespeed-report-login.htm](../fixtures/pagespeed-report-login.htm): relatório PageSpeed/Lighthouse de exemplo (captura com erro).
+- [tests/garapuvu.e2e.spec.js](../tests/garapuvu.e2e.spec.js): suíte e2e única (Playwright, ESM).
+- [readme.md](../readme.md): documentação geral do projeto.
+
+## Convenções técnicas
+- Config única do Playwright em `playwright.config.js` (ESM). Não recriar `.ts`.
+- A chave do time vem de `process.env.TEAM_KEY` (arquivo `.env`, não versionado). Nunca commitar a chave.
+- Os testes sobem um servidor HTTP local e acessam a interface via `http://localhost:8000`.
 
 ## Regras de trabalho para este projeto
 - Trabalhe sempre em português, com linguagem objetiva e técnica.
 - Preserve o contexto de diagnóstico e suporte operacional.
-- Evite expor dados sensíveis em mensagens, logs ou documentação pública.
+- Evite expor dados sensíveis em mensagens, logs ou documentação pública (inclui a TEAM_KEY).
 - Ao alterar a interface, mantenha o foco em usabilidade, clareza e rastreabilidade.
 - Quando possível, use as fixtures como base para validação e testes.
 - Priorize melhorias que ajudem na extração, análise e interpretação dos dados capturados.
