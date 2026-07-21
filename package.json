@@ -1,0 +1,32 @@
+{
+  "name": "garapuvu-catch-request",
+  "version": "1.0.0",
+  "description": "Ferramenta de captura e análise de requisições de navegação para diagnóstico web",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "networking",
+    "console",
+    "cookies",
+    "storage",
+    "security",
+    "performance",
+    "web-debugging"
+  ],
+  "author": "Douglas Queiroz",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
