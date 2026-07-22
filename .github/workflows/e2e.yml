@@ -5,8 +5,20 @@ name: E2E (Playwright)
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'fixtures/**'
+      - 'package.json'
+      - 'playwright.config.js'
   pull_request:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'fixtures/**'
+      - 'package.json'
+      - 'playwright.config.js'
 
 jobs:
   e2e:
