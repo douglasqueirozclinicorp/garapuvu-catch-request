@@ -21,11 +21,17 @@ catch-request-garapuvu/
 │   └── pagespeed-report-login.htm                    # Relatório PageSpeed/Lighthouse de exemplo (com erro de captura)
 ├── tests/
 │   └── garapuvu.e2e.spec.js                # Suíte e2e (Playwright)
+├── scripts/
+│   ├── security-report.mjs                 # Gera/abre o relatório HTML de segurança
+│   └── sonar-scan.sh                       # Roda o SonarScanner (resolve Java 21 + token do .env)
 ├── docs/                                    # Documentação (CLAUDE.md, TESTES.md)
 ├── playwright.config.js                     # Config única do Playwright
+├── eslint.config.js                         # ESLint + plugin de segurança
+├── .gitleaks.toml                           # Regras do gitleaks (detecção de secrets)
+├── sonar-project.properties                 # Config do SonarScanner
 ├── package.json
 ├── .env.example                             # Modelo do arquivo de ambiente (copie para .env)
-└── .env                                     # Chave do time (NÃO versionado)
+└── .env                                     # Chave do time + token do Sonar (NÃO versionado)
 ```
 
 ## Fluxo de uso
@@ -168,6 +174,132 @@ Cada execução do workflow gera o **relatório HTML** e o publica como artefato
    ```
 
 O artefato fica retido por 14 dias.
+
+## Auditoria de segurança e qualidade de código
+
+O projeto tem uma esteira de ferramentas para achar **vulnerabilidades, secrets vazados e problemas de qualidade**. Cada uma cobre um ponto cego diferente — nenhuma sozinha pega tudo.
+
+### Comandos disponíveis
+
+| Comando | O que faz | Requisito externo |
+| --- | --- | --- |
+| `npm run lint` | **ESLint** + `eslint-plugin-security` → padrões perigosos no código (eval, regex insegura, object injection) | — (npm) |
+| `npm run audit:deps` | `npm audit` → vulnerabilidades conhecidas nas dependências | — (npm) |
+| `npm run scan:secrets` | **gitleaks** nos arquivos atuais (working tree) | `brew install gitleaks` |
+| `npm run scan:secrets:history` | **gitleaks** em todo o histórico do git | `brew install gitleaks` |
+| `npm run audit:security` | roda lint + audit:deps + secrets (working tree + histórico) em sequência | gitleaks |
+| `npm run audit:report` | gera e **abre** um relatório HTML consolidado em `.security/report.html` | gitleaks |
+| `npm run test:coverage` | roda o e2e (Chromium) coletando cobertura → `coverage/lcov.info` | — (npm) |
+| `npm run sonar:up` | sobe o servidor SonarQube local (Docker) e espera ficar UP | Docker |
+| `npm run sonar:down` | para o servidor SonarQube local | Docker |
+| `npm run sonar:status` | mostra o estado do container do SonarQube | Docker |
+| `npm run sonar` | **SonarScanner** contra o SonarQube local (ver abaixo) | SonarQube + sonar-scanner + Java 21 |
+
+
+> A pasta `.security/` (relatórios) está no `.gitignore` — contém secrets em texto claro, nunca versione.
+
+### Detecção de secrets (gitleaks)
+
+A config fica em [.gitleaks.toml](.gitleaks.toml) (lida automaticamente). Além das regras padrão, adiciona **detecção por palavra-chave** (`PASSWORD=`, `USER=`, `SENHA=`) que pega credenciais de **baixa entropia** — que a detecção por entropia ignora. A regra também ignora **referências seguras** (`process.env.X`, `config.X`, `${VAR}`, `import`/`require`) e placeholders, evitando falso positivo.
+
+```bash
+npm run scan:secrets          # arquivos atuais
+npm run scan:secrets:history  # histórico completo do git
+npm run audit:report          # relatório HTML consolidado
+```
+
+### SonarQube / SonarLint
+
+Duas formas de uso, complementares:
+
+**1. SonarLint no VSCode (ao vivo, sem servidor)** — extensão `SonarSource.sonarlint-vscode`. Analisa o arquivo aberto e mostra achados no painel **Problems** (`Cmd+Shift+M`). Requer, no `settings.json`:
+```jsonc
+"sonarlint.automaticAnalysis": true,
+"sonarlint.focusOnNewCode": false   // mostra achados em todo o código, não só o novo
+```
+
+**2. SonarQube local (análise completa do projeto, via Docker)** — servidor + Connected Mode.
+
+**Pré-requisitos (uma vez):**
+```bash
+# Docker Desktop instalado e rodando + o scanner e o Java 21
+brew install --cask docker      # se ainda não tiver o Docker
+brew install sonar-scanner openjdk@21
+```
+> O scanner quebra em JDK novos (`NoClassDefFoundError: bouncycastle`); por isso o Java **21**. O [scripts/sonar-scan.sh](scripts/sonar-scan.sh) já resolve o JAVA_HOME automaticamente.
+
+**Gerenciar o servidor (scripts do package.json):**
+```bash
+npm run sonar:up        # cria (1ª vez, baixa ~700MB) ou inicia o container e espera ficar UP
+npm run sonar:status    # mostra o estado do container
+npm run sonar:down      # para o servidor (os dados ficam preservados nos volumes Docker)
+```
+O [scripts/sonar-server.sh](scripts/sonar-server.sh) usa um container `sonarqube` na porta **9000** com volumes persistentes.
+
+**Configurar (uma vez, após o primeiro `sonar:up`):**
+- Acesse `http://localhost:9000` (login inicial `admin`/`admin`, troque a senha).
+- Gere um token em **My Account → Security** e coloque no `.env` (não versionado):
+  ```bash
+  SONAR_HOST_URL=http://localhost:9000
+  SONAR_TOKEN=squ_xxxxxxxx
+  ```
+
+
+- No VSCode, conecte o **Connected Mode** → *Connect to SonarQube Server* → URL `http://localhost:9000` + token, e vincule ao projeto `garapuvu-catch-request`.
+
+**Rodar a análise:**
+```bash
+npm run sonar           # gera relatórios (ESLint/gitleaks), resolve o Java 21 e escaneia
+```
+
+**3. SonarCloud no CI (GitHub Actions)** — o servidor local não é acessível pelo runner, então o CI usa o **SonarCloud** (nuvem). Workflow: [.github/workflows/sonarcloud.yml](.github/workflows/sonarcloud.yml). Ele instala o Chromium, roda o e2e com cobertura, gera os relatórios do ESLint/gitleaks e envia tudo pro SonarCloud.
+
+Configuração (uma vez):
+1. Em [sonarcloud.io](https://sonarcloud.io), entre com o GitHub e **importe o repositório** (cria a *organization* e o projeto). Ajuste a **Project Key** para `garapuvu-catch-request` (a mesma do `sonar-project.properties`).
+2. Gere um token em **My Account → Security**.
+3. No GitHub do repo: **Settings → Secrets and variables → Actions**:
+   - **Secret** `SONAR_TOKEN` = o token do SonarCloud.
+   - **Secret** `TEAM_KEY` = a chave do time (o e2e precisa dela pra gerar coverage).
+   - **Variable** `SONAR_ORGANIZATION` = a sua organização no SonarCloud.
+4. Em **Administration → Analysis Method** do projeto no SonarCloud, **desligue** a "Automatic Analysis" (usaremos o CI).
+
+> Enquanto os secrets não estiverem configurados, o job falha no passo do Sonar — é esperado. Depois de configurados, cada push/PR na `main` publica a análise no SonarCloud.
+
+> No SonarQube, **credencial hardcoded é um _Security Hotspot_** (regra S2068), **não** uma _vulnerability_ — aparece na aba **Security Hotspots**, não no indicador **Security**.
+
+#### SonarQube como painel único (importa ESLint + gitleaks)
+
+O `npm run sonar` (script [scripts/sonar-scan.sh](scripts/sonar-scan.sh)) gera e importa os achados das outras ferramentas estáticas, agregando tudo no dashboard do Sonar:
+- **ESLint** → `.security/eslint-report.json` → `sonar.eslint.reportPaths` (aparecem como regras `external_eslint_repo:*`).
+- **gitleaks** → `.security/gitleaks.sarif` → `sonar.sarifReportPaths` (aparecem como `external_gitleaks:*`).
+
+Assim, no SonarQube você vê num lugar só: análise nativa (JS/CSS) + lint + secrets.
+
+**Regra S2068 customizada:** o Quality Profile **"Garapuvu way"** amplia as palavras vigiadas (`passwordWords`) com `senha, pass, secret, token, segredo, credential, apikey`. Ainda assim, o S2068 tem um **filtro de entropia no valor não configurável** — senha fraca (`123321123`) só é pega pelo gitleaks.
+
+#### Cobertura de testes (coverage)
+
+O coverage vem do **e2e do Playwright** (não há teste unitário):
+```bash
+npm run test:coverage    # roda o e2e no Chromium coletando cobertura V8 -> coverage/lcov.info
+```
+Usa [monocart-coverage-reports](https://github.com/cenfun/monocart-coverage-reports) (fixture em [tests/coverage.js](tests/coverage.js)).
+
+> ⚠️ **Limitação conhecida:** o código do app vive em `<script>` **inline** dentro dos HTML. O SonarQube **não importa cobertura de JS para arquivos `.html`** (`sonar.javascript.lcov.reportPaths` só casa com `.js`/`.ts`). Então o LCOV é gerado com cobertura real (~60%), mas o **dashboard do Sonar mostra 0%**. Para o coverage aparecer no Sonar, seria preciso **extrair os scripts inline para arquivos `.js` externos**.
+
+### Qual ferramenta pega o quê (matriz de cobertura)
+
+| Vazamento / problema | ESLint | SonarLint/Qube | gitleaks (config do projeto) |
+| --- | :---: | :---: | :---: |
+| Chave/token de **alta entropia** hardcoded | ❌ | ✅ (hotspot S2068) | ✅ |
+| Senha **fraca/óbvia** (`123321123`) | ❌ | ❌ (heurística de entropia ignora) | ✅ (regra por palavra-chave) |
+| `USER`/`PASSWORD` literais em `.md`/config | ❌ | ❌ | ✅ (regra por palavra-chave) |
+| Secrets no **histórico do git** | ❌ | ❌ | ✅ |
+| Padrões perigosos no código (eval, regex) | ✅ | ✅ | ❌ |
+| Code smells, bugs, manutenibilidade | parcial | ✅ | ❌ |
+| Vulnerabilidades em dependências | ❌ (`npm audit`) | ❌ | ❌ |
+
+**Resumo:** use **gitleaks** como linha de frente para secrets (inclusive histórico), **ESLint + SonarLint** para qualidade/bugs de código, e **`npm audit`** para dependências.
 
 ## Considerações de segurança
 - Dados sensíveis são cifrados com **AES‑256‑GCM** (chave via PBKDF2‑SHA256, 150k iterações).

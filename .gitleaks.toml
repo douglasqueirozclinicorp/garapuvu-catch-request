@@ -1,0 +1,41 @@
+# Config gitleaks do projeto — lida automaticamente por `gitleaks detect`.
+# Herda todas as regras padrão e adiciona detecção por PALAVRA-CHAVE
+# (pega USER/PASSWORD em texto claro, que a detecção por entropia ignora).
+[extend]
+useDefault = true
+
+[[rules]]
+id = "senha-hardcoded"
+description = "Senha atribuida em texto claro (PASSWORD=/SENHA=/PASSWD=)"
+regex = '''(?i)(?:password|senha|passwd|pwd)\s*[:=]\s*['"]?([^\s'"]{3,})'''
+secretGroup = 1
+keywords = ["password", "senha", "passwd", "pwd"]
+
+[[rules]]
+id = "credencial-usuario"
+description = "Par usuario/login atribuido em texto claro"
+regex = '''(?i)(?:user|usuario|login|username)\s*[:=]\s*['"]?([^\s'"]{3,})'''
+secretGroup = 1
+keywords = ["user", "usuario", "login", "username"]
+
+[allowlist]
+description = "Ignora referencias de codigo, exemplos, placeholders e artefatos gerados"
+# regexTarget=secret: as regras abaixo sao testadas contra o VALOR capturado.
+# Se o valor casar, o achado e' ignorado (nao e' um secret hardcoded).
+regexTarget = "secret"
+regexes = [
+  # Referencias a variaveis de ambiente / config (o jeito SEGURO — nao e' vazamento)
+  '''(?i)^(?:process\.)?env\.''',                 # env.user, process.env.PASSWORD
+  '''(?i)^(?:config|settings|secrets?|credentials?|conf)\.''',
+  '''(?i)^(?:import|require|os\.environ|getenv)\b''',
+  '''^\$\{?[A-Z_]+\}?$''',                          # ${VAR} / $VAR (interpolacao)
+  # Placeholders e exemplos
+  '''(?i)^(seu[-_]?token|your[-_]?key|xxx+|placeholder|exemplo|example|changeme|dummy|test|<[^>]+>)$''',
+]
+paths = [
+  '''node_modules/''',
+  '''playwright-report/''',
+  '''test-results/''',
+  '''.*_files/''',        # assets de paginas salvas (PageSpeed etc.)
+  '''\.security/''',       # saida dos proprios relatorios (evita auto-scan)
+]

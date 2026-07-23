@@ -6,6 +6,17 @@
   "scripts": {
     "serve": "python3 -m http.server 8000",
     "test": "playwright test",
+    "test:coverage": "cross-env COVERAGE=1 playwright test --project=chromium",
+    "lint": "eslint .",
+    "audit:deps": "npm audit",
+    "scan:secrets": "gitleaks detect --no-git --source . --verbose",
+    "scan:secrets:history": "gitleaks detect --source . --verbose",
+    "sonar": "bash scripts/sonar-scan.sh",
+    "sonar:up": "bash scripts/sonar-server.sh up",
+    "sonar:down": "bash scripts/sonar-server.sh down",
+    "sonar:status": "bash scripts/sonar-server.sh status",
+    "audit:report": "node scripts/security-report.mjs",
+    "audit:security": "npm run lint; npm run audit:deps; npm run scan:secrets; npm run scan:secrets:history; npm run sonar",
     "test:chromium": "playwright test --project=chromium",
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
@@ -28,8 +39,14 @@
   "author": "Douglas Queiroz",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@playwright/test": "^1.40.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "eslint": "^9.39.5",
+    "eslint-plugin-html": "^8.1.4",
+    "eslint-plugin-security": "^4.0.1",
+    "globals": "^17.7.0",
+    "monocart-coverage-reports": "^2.12.12"
   }
 }
