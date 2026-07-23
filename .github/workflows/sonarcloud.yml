@@ -4,7 +4,10 @@ name: SonarCloud
 # Requer os secrets/variaveis configurados no repositorio (ver README):
 #   - secret  SONAR_TOKEN            (token gerado no sonarcloud.io)
 #   - secret  TEAM_KEY               (chave do time, para o e2e gerar coverage)
-#   - variable SONAR_ORGANIZATION    (a organizacao no SonarCloud)
+#   - variable SONAR_ORGANIZATION    (Organization Key no SonarCloud)
+#   - variable SONAR_PROJECT_KEY     (Project Key no SonarCloud, ex: org_repo)
+# IMPORTANTE: desligue a "Automatic Analysis" no SonarCloud
+# (Administration > Analysis Method), senao ela conflita com este CI.
 on:
   push:
     branches: [main]
@@ -55,10 +58,11 @@ jobs:
             --report-path .security/gitleaks.sarif || true
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
         with:
           args: >
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
