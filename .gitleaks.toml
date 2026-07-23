@@ -38,4 +38,6 @@ paths = [
   '''test-results/''',
   '''.*_files/''',        # assets de paginas salvas (PageSpeed etc.)
   '''\.security/''',       # saida dos proprios relatorios (evita auto-scan)
+  '''fixtures/''',         # sessoes/relatorios de TESTE (contem secrets ficticios de proposito)
+  '''src/testes-sonar\.js''',  # arquivo-demo do Sonar (secrets forjados, nao e producao)
 ]

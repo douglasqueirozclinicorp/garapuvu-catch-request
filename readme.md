@@ -175,6 +175,24 @@ Cada execução do workflow gera o **relatório HTML** e o publica como artefato
 
 O artefato fica retido por 14 dias.
 
+### Análise SonarCloud no CI
+O workflow [.github/workflows/sonarcloud.yml](.github/workflows/sonarcloud.yml) roda a análise no [sonarcloud.io](https://sonarcloud.io) a cada push na `main` e em PRs. Ele gera a cobertura (`npm run test:coverage` → `coverage/lcov.info`), o relatório do ESLint e o SARIF do gitleaks, e envia tudo para o SonarCloud, que decora o PR com o **Quality Gate**.
+
+**Configuração (uma vez) — Settings → Secrets and variables → Actions:**
+
+| Tipo | Nome | Valor | Onde obter |
+|---|---|---|---|
+| **Secret** | `SONAR_TOKEN` | token do **sonarcloud.io** (não do servidor local!) | My Account → Security → Generate Tokens |
+| **Secret** | `TEAM_KEY` | chave do time (o CI precisa dela p/ gerar coverage) | cofre do time |
+| **Variable** | `SONAR_ORGANIZATION` | ex.: `douglasqueirozclinicorp` | Organization Key no SonarCloud |
+| **Variable** | `SONAR_PROJECT_KEY` | ex.: `douglasqueirozclinicorp_garapuvu-catch-request` | Project Key no SonarCloud |
+
+> ⚠️ **Desligue a "Automatic Analysis"** no SonarCloud (projeto → **Administration → Analysis Method**). Se ela ficar ligada, o scan do CI é rejeitado com *"You are running CI analysis while Automatic Analysis is enabled"* — e a análise automática **não importa a cobertura** (não roda seus testes), deixando o painel de Coverage vazio.
+
+> 📊 **New Code × Overall Code:** no PR o SonarCloud mostra só o *new code* (o delta). As métricas cheias (coverage total, duplicação, total de issues) aparecem na aba **Overall Code**, que só popula quando a análise roda na branch **`main`** — ou seja, **depois de mergear o PR**.
+
+Achados que não são vazamento real (secrets fictícios das `fixtures/`, o arquivo-demo `src/testes-sonar.js`) ficam no allowlist do [.gitleaks.toml](.gitleaks.toml) e o demo é excluído em [sonar-project.properties](sonar-project.properties), para não derrubar o Quality Gate.
+
 ## Auditoria de segurança e qualidade de código
 
 O projeto tem uma esteira de ferramentas para achar **vulnerabilidades, secrets vazados e problemas de qualidade**. Cada uma cobre um ponto cego diferente — nenhuma sozinha pega tudo.
@@ -255,15 +273,16 @@ npm run sonar           # gera relatórios (ESLint/gitleaks), resolve o Java 21 
 **3. SonarCloud no CI (GitHub Actions)** — o servidor local não é acessível pelo runner, então o CI usa o **SonarCloud** (nuvem). Workflow: [.github/workflows/sonarcloud.yml](.github/workflows/sonarcloud.yml). Ele instala o Chromium, roda o e2e com cobertura, gera os relatórios do ESLint/gitleaks e envia tudo pro SonarCloud.
 
 Configuração (uma vez):
-1. Em [sonarcloud.io](https://sonarcloud.io), entre com o GitHub e **importe o repositório** (cria a *organization* e o projeto). Ajuste a **Project Key** para `garapuvu-catch-request` (a mesma do `sonar-project.properties`).
-2. Gere um token em **My Account → Security**.
-3. No GitHub do repo: **Settings → Secrets and variables → Actions**:
+1. Em [sonarcloud.io](https://sonarcloud.io), entre com o GitHub e **importe o repositório** (cria a *organization* e o projeto). **Anote** o **Organization Key** e o **Project Key** que o SonarCloud atribuiu (o Project Key costuma ser `<org>_<repo>`, ex.: `douglasqueirozclinicorp_garapuvu-catch-request`).
+2. ⚠️ **Desligue a "Automatic Analysis"** em **Administration → Analysis Method** do projeto. Se ficar ligada, ela **conflita** com este CI (roda em paralelo, varre o repo todo e **nunca tem coverage**) — foi o que fez o dashboard mostrar 25k linhas e coverage vazio.
+3. Gere um token em **My Account → Security**.
+4. No GitHub do repo: **Settings → Secrets and variables → Actions**:
    - **Secret** `SONAR_TOKEN` = o token do SonarCloud.
    - **Secret** `TEAM_KEY` = a chave do time (o e2e precisa dela pra gerar coverage).
-   - **Variable** `SONAR_ORGANIZATION` = a sua organização no SonarCloud.
-4. Em **Administration → Analysis Method** do projeto no SonarCloud, **desligue** a "Automatic Analysis" (usaremos o CI).
+   - **Variable** `SONAR_ORGANIZATION` = o Organization Key.
+   - **Variable** `SONAR_PROJECT_KEY` = o Project Key (o `<org>_<repo>` do passo 1).
 
-> Enquanto os secrets não estiverem configurados, o job falha no passo do Sonar — é esperado. Depois de configurados, cada push/PR na `main` publica a análise no SonarCloud.
+> Sintomas de config faltando: `organizationKey=` vazio ou `Not authorized or project not found` = as **variables/secret** não estão setadas. Dashboard com muitas linhas e sem coverage = **Automatic Analysis ainda ligada**.
 
 > No SonarQube, **credencial hardcoded é um _Security Hotspot_** (regra S2068), **não** uma _vulnerability_ — aparece na aba **Security Hotspots**, não no indicador **Security**.
 
