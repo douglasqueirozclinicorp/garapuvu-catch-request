@@ -16,3 +16,9 @@ blob-report/
 # Pasta de assets da pagina salva do PageSpeed (pesada; nao versionada)
 oci-layout*/
 *_files/
+
+# Relatorios de seguranca (contem segredos em texto claro; nunca versionar)
+.security/
+
+# Cobertura de testes (gerada por npm run test:coverage)
+coverage/

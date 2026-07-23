@@ -16,6 +16,9 @@ const SLOWMO = Number(process.env.SLOWMO) || 0;
 
 export default defineConfig({
   testDir: './tests',
+  /* Cobertura V8 (só com COVERAGE=1): limpa o cache antes e gera o LCOV no fim. */
+  globalSetup: './tests/coverage.setup.js',
+  globalTeardown: './tests/coverage.teardown.js',
   /* Roda os arquivos de teste em paralelo. */
   fullyParallel: true,
   /* Falha o build no CI se sobrar um test.only no codigo. */

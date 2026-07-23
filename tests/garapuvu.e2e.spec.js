@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './coverage.js';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';

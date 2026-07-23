@@ -61,3 +61,13 @@ Abaixo está um resumo em formato de sequência de prompts, para registrar o que
 
 ## Observações finais
 Este arquivo serve como ponto de entrada para futuras alterações no projeto. Ele concentra os requisitos de negócio, os arquivos relevantes e a intenção do fluxo de trabalho, sem perder o foco em suporte e diagnóstico.
+
+
+TEAM_KEY=cieF118sAqHhEuFAPtiuQI1M0dzhzIUE
+USER=env.user
+PASSWORD=env.password
+USER="#*@QADSHd*SBD22AS*&BD*&A)S!#@";
+PASSWORD="Xk9#mQ!2vLp@zR7$wN4";
+PASS="Xk9#mQ!2vLp@zR7$wN4";
+PWD="Xk9#mQ!2vLp@zR7$wN4";
+SENHA="Xk9#mQ!2vLp@zR7$wN4";
